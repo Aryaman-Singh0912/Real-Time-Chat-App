@@ -10,3 +10,6 @@ class UserLogin(BaseModel):
 
 class ContactCreate(BaseModel):
     contact_id: int
+
+class ConversationCreate(BaseModel):
+    other_user_id: int

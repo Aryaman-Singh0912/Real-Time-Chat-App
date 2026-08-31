@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal
-from schemas import UserCreate, UserLogin, ContactCreate
-from models import Users, Contact
+from schemas import UserCreate, UserLogin, ContactCreate, ConversationCreate
+from models import Users, Contact, Conversation
 from auth import hash_password, verify_password, create_access_token, decode_access_token
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy import or_, and_
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -93,3 +94,22 @@ def add_contact(contact: ContactCreate, current_user: Users = Depends(get_curren
     db.refresh(new_contact)
 
     return {"id": new_contact.id, "owner_id": new_contact.owner_id, "contact_id": new_contact.contact_id}
+
+@app.post("/conversations")
+def start_conversation(convo: ConversationCreate, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    existing = db.query(Conversation).filter(
+        or_(
+            and_(Conversation.user_one_id == current_user.id, Conversation.user_two_id == convo.other_user_id),
+            and_(Conversation.user_one_id == convo.other_user_id, Conversation.user_two_id == current_user.id)
+        )
+    ).first()
+
+    if existing:
+        return {"id": existing.id, "user_one_id": existing.user_one_id, "user_two_id": existing.user_two_id}
+
+    new_convo = Conversation(user_one_id=current_user.id, user_two_id=convo.other_user_id)
+    db.add(new_convo)
+    db.commit()
+    db.refresh(new_convo)
+
+    return {"id": new_convo.id, "user_one_id": new_convo.user_one_id, "user_two_id": new_convo.user_two_id}
