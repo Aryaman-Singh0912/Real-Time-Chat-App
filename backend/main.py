@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal
-from schemas import UserCreate, UserLogin, ContactCreate, ConversationCreate
-from models import Users, Contact, Conversation
+from schemas import UserCreate, UserLogin, ContactCreate, ConversationCreate, MessageCreate
+from models import Users, Contact, Conversation, Message
 from auth import hash_password, verify_password, create_access_token, decode_access_token
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import or_, and_
@@ -113,3 +113,30 @@ def start_conversation(convo: ConversationCreate, current_user: Users = Depends(
     db.refresh(new_convo)
 
     return {"id": new_convo.id, "user_one_id": new_convo.user_one_id, "user_two_id": new_convo.user_two_id}
+
+@app.post("/messages")
+def send_message(msg: MessageCreate, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    conversation = db.query(Conversation).filter(Conversation.id == msg.conversation_id).first()
+
+    if not conversation:
+        raise HTTPException(status_code=401, detail="Conversation not found")
+
+    if current_user.id not in [conversation.user_one_id, conversation.user_two_id]:
+        raise HTTPException(status_code=403, detail="You are not part of this conversation")
+
+    new_message = Message(
+        conversation_id = msg.conversation_id,
+        sender_id = current_user.id,
+        content = msg.content
+    )
+    db.add(new_message)
+    db.commit()
+    db.refresh(new_message)
+    return {
+        "id": new_message.id,
+        "conversation_id": new_message.conversation_id,
+        "sender_id": new_message.sender_id,
+        "content": new_message.content,
+        "created_at": new_message.created_at
+    }
+

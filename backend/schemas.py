@@ -13,3 +13,9 @@ class ContactCreate(BaseModel):
 
 class ConversationCreate(BaseModel):
     other_user_id: int
+
+class MessageCreate(BaseModel):
+    conversation_id: int
+    content: str
+
+    
