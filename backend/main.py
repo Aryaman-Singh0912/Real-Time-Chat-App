@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, WebSocket
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from schemas import UserCreate, UserLogin, ContactCreate, ConversationCreate, MessageCreate
@@ -11,6 +11,26 @@ from sqlalchemy import or_, and_
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 app = FastAPI()
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: dict[int, WebSocket] = {}
+
+    async def connect(self, user_id: int, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections[user_id] = websocket
+
+    def disconnect(self, user_id: int):
+        if user_id in self.active_connections:
+            del self.active_connections[user_id]
+
+    async def send_personal_message(self, message: dict, user_id: int):
+        if user_id in self.active_connections:
+            websocket = self.active_connections[user_id]
+            await websocket.send_json(message)
+
+manager = ConnectionManager()
+
 
 def get_db():
     db = SessionLocal()
