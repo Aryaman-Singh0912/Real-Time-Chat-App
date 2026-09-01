@@ -119,7 +119,7 @@ def send_message(msg: MessageCreate, current_user: Users = Depends(get_current_u
     conversation = db.query(Conversation).filter(Conversation.id == msg.conversation_id).first()
 
     if not conversation:
-        raise HTTPException(status_code=401, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found")
 
     if current_user.id not in [conversation.user_one_id, conversation.user_two_id]:
         raise HTTPException(status_code=403, detail="You are not part of this conversation")
@@ -140,3 +140,23 @@ def send_message(msg: MessageCreate, current_user: Users = Depends(get_current_u
         "created_at": new_message.created_at
     }
 
+@app.get("/conversations/{conversation_id}/messages")
+def get_messages(conversation_id: int, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    conversation = db.query(Conversation).filter(Conversation.id == conversation_id).first()
+
+    if not conversation:
+        raise HTTPException(status_code=403, detail="Conversation not found")
+
+    if current_user.id not in [conversation.user_one_id, conversation.user_two_id]:
+        raise HTTPException(status_code=404, detail="You are not a part of this conversation")
+
+    messages = db.query(Message).filter(Message.conversation_id == conversation_id).order_by(Message.created_at).all()
+    return [
+        {
+            "id": m.id,
+            "sender_id": m.sender_id,
+            "content": m.content,
+            "created_at": m.created_at
+        }
+        for m in messages
+    ]
