@@ -12,7 +12,7 @@ export default function ChatWindow({ contact, messages, isTyping, onSend, onTypi
   }, [messages.length, isTyping]);
 
   return (
-    <section className="flex-1 h-full flex flex-col bg-ink">
+    <section className="flex-1 h-full flex flex-col bg-teal">
       <ChatHeader contact={contact} />
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto thin-scroll py-4">

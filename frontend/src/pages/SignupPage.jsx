@@ -35,12 +35,18 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-cloud px-4 py-10">
       <div className="w-full max-w-md bg-paper rounded-3xl shadow-sm p-8 sm:p-10">
-        <h1 className="font-display font-bold text-3xl text-ink mb-1">Create account</h1>
-        <p className="text-slate text-sm mb-6">Join and start chatting in seconds.</p>
+        <h1 className="font-display font-bold text-3xl text-ink mb-1">
+          Create account
+        </h1>
+        <p className="text-slate text-sm mb-6">
+          Join and start chatting in seconds.
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Username</label>
+            <label className="block text-sm font-medium text-ink mb-1">
+              Username
+            </label>
             <input
               type="text"
               value={username}
@@ -51,7 +57,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Password</label>
+            <label className="block text-sm font-medium text-ink mb-1">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -62,7 +70,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Confirm password</label>
+            <label className="block text-sm font-medium text-ink mb-1">
+              Confirm password
+            </label>
             <input
               type="password"
               value={confirmPassword}
@@ -77,7 +87,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-ink text-white font-medium rounded-xl py-2.5 hover:bg-ink/90 transition-colors disabled:opacity-60"
+            className="w-full bg-teal text-white font-medium rounded-xl py-2.5 hover:bg-teal/90 transition-colors disabled:opacity-60"
           >
             {isSubmitting ? "Creating account..." : "Sign up"}
           </button>
@@ -85,7 +95,10 @@ export default function SignupPage() {
 
         <p className="text-sm text-slate mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="text-ember font-medium hover:text-ember-dark">
+          <Link
+            to="/login"
+            className="text-ember font-medium hover:text-ember-dark"
+          >
             Sign in
           </Link>
         </p>

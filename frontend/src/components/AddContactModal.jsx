@@ -12,7 +12,7 @@ export default function AddContactModal({ onClose, onAdd }) {
   );
 
   return (
-    <div className="fixed inset-0 bg-ink/50 flex items-center justify-center z-50 px-4">
+    <div className="fixed inset-0 bg-teal/50 flex items-center justify-center z-50 px-4">
       <div className="bg-paper rounded-2xl w-full max-w-sm p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display font-bold text-xl text-ink">Add contact</h2>

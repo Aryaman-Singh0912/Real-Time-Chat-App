@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-cloud px-4 py-10">
       <div className="w-full max-w-4xl bg-paper rounded-3xl shadow-sm overflow-hidden flex">
         {/* Decorative preview panel - purely visual, hidden on small screens */}
-        <div className="hidden md:flex flex-col justify-center gap-3 w-1/2 bg-ink p-10">
+        <div className="hidden md:flex flex-col justify-center gap-3 w-1/2 bg-teal p-10">
           <div className="self-start bg-white/95 text-ink text-sm rounded-bubble rounded-bl-md px-4 py-2 max-w-[75%]">
             Hola! Nice to hear from you.
           </div>
@@ -78,7 +78,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-ink text-white font-medium rounded-xl py-2.5 hover:bg-ink/90 transition-colors disabled:opacity-60"
+              className="w-full bg-teal text-white font-medium rounded-xl py-2.5 hover:bg-teal/90 transition-colors disabled:opacity-60"
             >
               {isSubmitting ? "Signing in..." : "Sign in"}
             </button>

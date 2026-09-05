@@ -4,15 +4,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#17151F",       // near-black, chat window background
-        paper: "#FFFFFF",     // cards, light surfaces
-        cloud: "#F1ECE1",     // app backdrop, warm neutral
-        ember: "#F0703B",     // primary accent - outgoing bubbles, buttons
-        "ember-dark": "#D9592A",
-        lagoon: "#BFE1F0",    // secondary accent - incoming bubbles
-        slate: "#6E6A75",     // muted text
-        moss: "#4CAF7D",      // online indicator
-        mist: "#E5E1D6",      // borders / dividers on light surfaces
+        ink: "#17151F", // near-black - headings, body text (back to black, as requested)
+        paper: "#FFFFFF", // cards, light surfaces
+        cloud: "#E0FBFB", // app backdrop, pale cyan tint
+        ember: "#FF69B4", // primary accent - outgoing bubbles, buttons
+        "ember-dark": "#E14F9C",
+        lagoon: "#00F0FF", // secondary accent
+        teal: "#069494", // NEW - dark chat window / button background
+        slate: "#6E6A75", // muted text
+        moss: "#4CAF7D", // online indicator - status color, not a brand color
+        mist: "#CBEFEF", // borders / dividers on light surfaces
       },
       fontFamily: {
         display: ["'Baloo 2'", "sans-serif"],
@@ -24,4 +25,4 @@ export default {
     },
   },
   plugins: [],
-}
+};
