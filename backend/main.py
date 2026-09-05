@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, WebSocket
+from fastapi import FastAPI, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from schemas import UserCreate, UserLogin, ContactCreate, ConversationCreate, MessageCreate
@@ -6,6 +6,7 @@ from models import Users, Contact, Conversation, Message
 from auth import hash_password, verify_password, create_access_token, decode_access_token
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import or_, and_
+from datetime import datetime, timezone
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -63,6 +64,47 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
 
     return {"id": new_user.id, "username": new_user.username}
 
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Depends(get_db)):
+    payload = decode_access_token(token)
+    if payload is None:
+        await websocket.close(code=1008)
+        return
+
+    username = payload.get("sub")
+    user = db.query(Users).filter(Users.username == username).first()
+    if user is None:
+        await websocket.close(code=1008)
+        return
+    await manager.connect(user.id, websocket) # type: ignore
+    try:
+        while True:
+            data = await websocket.receive_json()
+            new_message = Message(
+                conversation_id=data["conversation_id"],
+                sender_id=user.id,
+                content=data["content"]
+            )
+            db.add(new_message)
+            db.commit()
+            db.refresh(new_message)
+
+            await manager.send_personal_message(
+                {
+                    "id": new_message.id,
+                    "conversation_id": new_message.conversation_id,
+                    "sender_id": new_message.sender_id,
+                    "content": new_message.content,
+                    "created_at": str(new_message.created_at)
+                },
+                data["receiver_id"]
+            )
+
+    except WebSocketDisconnect:
+        manager.disconnect(user.id) # type: ignore
+
+
+        
 @app.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(Users).filter(Users.username == user.username).first()

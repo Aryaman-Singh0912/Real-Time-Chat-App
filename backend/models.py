@@ -9,6 +9,7 @@ class Users(Base):
     username = Column(String, unique=True, index = True, nullable=False)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_seen = Column(DateTime(timezone=True), nullable=True)
 
 class Contact(Base):
     __tablename__ = "contacts"
