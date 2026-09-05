@@ -1,17 +1,26 @@
 import ConversationListItem from "./ConversationListItem";
+import ThemeToggle from "./ThemeToggle";
 
-export default function Sidebar({ conversations, activeId, onSelect, onAddContactClick }) {
+export default function Sidebar({
+  conversations,
+  activeId,
+  onSelect,
+  onAddContactClick,
+}) {
   return (
     <aside className="w-full sm:w-[340px] shrink-0 h-full bg-paper border-r border-mist flex flex-col">
       <div className="px-5 pt-6 pb-4 flex items-center justify-between">
         <h1 className="font-display font-bold text-2xl text-ink">Messages</h1>
-        <button
-          onClick={onAddContactClick}
-          title="Add contact"
-          className="w-9 h-9 rounded-full bg-ember text-white text-xl leading-none flex items-center justify-center hover:bg-ember-dark transition-colors"
-        >
-          +
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            onClick={onAddContactClick}
+            title="Add contact"
+            className="w-9 h-9 rounded-full bg-ember text-white text-xl leading-none flex items-center justify-center hover:bg-ember-dark transition-colors"
+          >
+            +
+          </button>
+        </div>
       </div>
 
       <div className="px-5 pb-4">

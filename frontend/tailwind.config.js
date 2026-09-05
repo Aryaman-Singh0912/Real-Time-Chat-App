@@ -1,19 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
       colors: {
-        ink: "#17151F", // near-black - headings, body text (back to black, as requested)
-        paper: "#FFFFFF", // cards, light surfaces
-        cloud: "#E0FBFB", // app backdrop, pale cyan tint
-        ember: "#FF69B4", // primary accent - outgoing bubbles, buttons
-        "ember-dark": "#E14F9C",
-        lagoon: "#00F0FF", // secondary accent
-        teal: "#069494", // NEW - dark chat window / button background
-        slate: "#6E6A75", // muted text
-        moss: "#4CAF7D", // online indicator - status color, not a brand color
-        mist: "#CBEFEF", // borders / dividers on light surfaces
+        ink: "rgb(var(--color-ink) / <alpha-value>)",
+        paper: "rgb(var(--color-paper) / <alpha-value>)",
+        cloud: "rgb(var(--color-cloud) / <alpha-value>)",
+        ember: "rgb(var(--color-ember) / <alpha-value>)",
+        "ember-dark": "rgb(var(--color-ember-dark) / <alpha-value>)",
+        lagoon: "rgb(var(--color-lagoon) / <alpha-value>)",
+        teal: "rgb(var(--color-teal) / <alpha-value>)",
+        slate: "rgb(var(--color-slate) / <alpha-value>)",
+        moss: "rgb(var(--color-moss) / <alpha-value>)",
+        mist: "rgb(var(--color-mist) / <alpha-value>)",
       },
       fontFamily: {
         display: ["'Baloo 2'", "sans-serif"],

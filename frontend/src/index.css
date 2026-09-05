@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-ink: 23 21 31;
+  --color-paper: 255 255 255;
+  --color-cloud: 224 251 251;
+  --color-ember: 255 105 180;
+  --color-ember-dark: 225 79 156;
+  --color-lagoon: 0 240 255;
+  --color-teal: 6 148 148;
+  --color-slate: 110 106 117;
+  --color-moss: 76 175 125;
+  --color-mist: 203 239 239;
+}
+
+.dark {
+  --color-ink: 237 238 242;
+  --color-paper: 18 26 27;
+  --color-cloud: 11 20 21;
+  --color-ember: 255 126 194;
+  --color-ember-dark: 255 154 207;
+  --color-teal: 5 38 38;
+  --color-slate: 159 180 180;
+  --color-mist: 29 43 44;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -15,8 +39,8 @@ body,
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  background-color: #F1ECE1;
-  color: #17151F;
+  background-color: rgb(var(--color-cloud));
+  color: rgb(var(--color-ink));
 }
 
 /* thin, unobtrusive scrollbars for the message list / sidebar */
@@ -28,7 +52,7 @@ body {
   border-radius: 999px;
 }
 .thin-scroll.light::-webkit-scrollbar-thumb {
-  background-color: rgba(23, 21, 31, 0.15);
+  background-color: rgb(var(--color-ink) / 0.15);
 }
 
 @keyframes bounce-dot {
