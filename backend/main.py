@@ -76,10 +76,20 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
     if user is None:
         await websocket.close(code=1008)
         return
+
     await manager.connect(user.id, websocket) # type: ignore
+
     try:
         while True:
             data = await websocket.receive_json()
+
+            if data["type"] == "typing":
+                await manager.send_personal_message(
+                    {"type": "typing", "sender_id": user.id},
+                    data["receiver_id"]
+                )
+                continue
+
             new_message = Message(
                 conversation_id=data["conversation_id"],
                 sender_id=user.id,
@@ -91,6 +101,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
 
             await manager.send_personal_message(
                 {
+                    "type": "message",
                     "id": new_message.id,
                     "conversation_id": new_message.conversation_id,
                     "sender_id": new_message.sender_id,
@@ -104,8 +115,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
         manager.disconnect(user.id) # type: ignore
         user.last_seen = datetime.now(timezone.utc) # type: ignore
         db.commit()
-
-
         
 @app.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
