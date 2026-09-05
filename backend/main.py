@@ -102,6 +102,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
 
     except WebSocketDisconnect:
         manager.disconnect(user.id) # type: ignore
+        user.last_seen = datetime.now(timezone.utc) # type: ignore
+        db.commit()
 
 
         
@@ -203,7 +205,13 @@ def send_message(msg: MessageCreate, current_user: Users = Depends(get_current_u
     }
 
 @app.get("/conversations/{conversation_id}/messages")
-def get_messages(conversation_id: int, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+def get_messages(
+    conversation_id: int,
+    skip: int = 0,
+    limit: int = 20,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     conversation = db.query(Conversation).filter(Conversation.id == conversation_id).first()
 
     if not conversation:
@@ -212,7 +220,15 @@ def get_messages(conversation_id: int, current_user: Users = Depends(get_current
     if current_user.id not in [conversation.user_one_id, conversation.user_two_id]:
         raise HTTPException(status_code=404, detail="You are not a part of this conversation")
 
-    messages = db.query(Message).filter(Message.conversation_id == conversation_id).order_by(Message.created_at).all()
+    messages = (
+        db.query(Message)
+        .filter(Message.conversation_id == conversation_id)
+        .order_by(Message.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
     return [
         {
             "id": m.id,
@@ -220,5 +236,19 @@ def get_messages(conversation_id: int, current_user: Users = Depends(get_current
             "content": m.content,
             "created_at": m.created_at
         }
-        for m in messages
+        for m in reversed(messages)
     ]
+
+@app.get("/users/{user_id}/status")
+def get_user_status(user_id: int, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    target_user = db.query(Users).filter(Users.id == user_id).first()
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    is_online = user_id in manager.active_connections
+
+    return {
+        "user_id": user_id,
+        "online": is_online,
+        "last_seen": target_user.last_seen if not is_online else None
+    }
