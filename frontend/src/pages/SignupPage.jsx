@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function SignupPage() {
   const [username, setUsername] = useState("");
@@ -22,18 +23,21 @@ export default function SignupPage() {
 
     setIsSubmitting(true);
     try {
-      // TODO: connect to backend - see services/api.js's signup()
       await signup(username, password);
       navigate("/login");
     } catch (err) {
-      setError("Couldn't sign up — the backend isn't connected yet.");
+      setError(err.message || "Something went wrong — please try again.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cloud px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-cloud px-4 py-10 relative">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md bg-paper rounded-3xl shadow-sm p-8 sm:p-10">
         <h1 className="font-display font-bold text-3xl text-ink mb-1">
           Create account
