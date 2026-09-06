@@ -20,6 +20,18 @@ export default {
         display: ["'Baloo 2'", "sans-serif"],
         body: ["'Inter'", "sans-serif"],
       },
+      // Bumped every named size up a notch from Tailwind's defaults, so
+      // text-sm, text-base, text-xl etc. all render slightly bigger
+      // everywhere they're already used - no per-component edits needed.
+      fontSize: {
+        xs: ["0.8125rem", { lineHeight: "1.25rem" }],
+        sm: ["0.9375rem", { lineHeight: "1.5rem" }],
+        base: ["1.0625rem", { lineHeight: "1.75rem" }],
+        lg: ["1.1875rem", { lineHeight: "1.75rem" }],
+        xl: ["1.3125rem", { lineHeight: "1.875rem" }],
+        "2xl": ["1.625rem", { lineHeight: "2.1rem" }],
+        "3xl": ["2rem", { lineHeight: "2.4rem" }],
+      },
       borderRadius: {
         bubble: "1.25rem",
       },

@@ -9,8 +9,18 @@ export const API_BASE_URL = "http://127.0.0.1:8000"; // update if your backend r
 // POST `${API_BASE_URL}/login` with JSON body { username, password }
 // Returns { access_token, token_type } on success - store access_token
 // somewhere (e.g. localStorage) so other requests can use it.
-export async function login(username, password) {
-  throw new Error("login() is not connected to the backend yet");
+export async function login(username, password){
+  const response = await fetch(`${API_BASE_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type" : "application/json" },
+    body: JSON.stringify({ username,password }),
+  });
+
+  if (!response.ok){
+    throw new Error("Invalid username or password");
+  }
+
+  return response.json();
 }
 
 // TODO: connect to backend

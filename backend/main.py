@@ -7,11 +7,20 @@ from auth import hash_password, verify_password, create_access_token, decode_acc
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import or_, and_
 from datetime import datetime, timezone
+from fastapi.middleware.cors import CORSMiddleware
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ConnectionManager:
     def __init__(self):
@@ -50,6 +59,38 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     return user
+
+@app.get("/conversations")
+def get_conversations(current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    conversations = db.query(Conversation).filter(
+        or_(Conversation.user_one_id == current_user.id, Conversation.user_two_id == current_user.id)
+    ).all()
+
+    result = []
+    for convo in conversations:
+        other_id = convo.user_two_id if convo.user_one_id == current_user.id else convo.user_one_id
+        other_user = db.query(Users).filter(Users.id == other_id).first()
+
+        last_message = (
+            db.query(Message)
+            .filter(Message.conversation_id == convo.id)
+            .order_by(Message.created_at.desc())
+            .first()
+        )
+
+        result.append({
+            "id": convo.id,
+            "contact": {
+                "id": other_user.id,
+                "username": other_user.username, 
+                "online": other_user.id in manager.active_connections,
+                "last_seen": other_user.last_seen,
+            },
+            "last_message": last_message.content if last_message else None,
+            "last_message_time": last_message.created_at if last_message else None,
+        })
+
+    return result
 
 @app.post("/signup")
 def signup(user: UserCreate, db: Session = Depends(get_db)):
