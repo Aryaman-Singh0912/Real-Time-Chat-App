@@ -1,21 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import ChatWindow from "../components/ChatWindow";
 import AddContactModal from "../components/AddContactModal";
-import { CONVERSATIONS, MESSAGES_BY_CONVERSATION } from "../data/mockData";
+import { MESSAGES_BY_CONVERSATION } from "../data/mockData";
+import { getConversations } from "../services/api";
+import { formatMessageTime } from "../utils/time";
 
 export default function ChatPage() {
-  // TODO: connect to backend - conversations and messages below are mock
-  // data (src/data/mockData.js). Replace with real data from
-  // GET /conversations and GET /conversations/{id}/messages once ready.
-  const [conversations] = useState(CONVERSATIONS);
-  const [messagesByConversation, setMessagesByConversation] = useState(MESSAGES_BY_CONVERSATION);
-  const [activeId, setActiveId] = useState(CONVERSATIONS[0]?.id ?? null);
+  const token = localStorage.getItem("token");
+
+  const [conversations, setConversations] = useState([]);
+  const [messagesByConversation, setMessagesByConversation] = useState(
+    MESSAGES_BY_CONVERSATION,
+  );
+  const [activeId, setActiveId] = useState(null);
   const [isAddContactOpen, setIsAddContactOpen] = useState(false);
 
   // TODO: connect to backend - this should come from incoming
   // {"type": "typing", ...} messages on the WebSocket, not local state.
   const [isTyping] = useState(false);
+
+  useEffect(() => {
+    async function loadConversations() {
+      const data = await getConversations(token);
+      const mapped = data.map((raw) => ({
+        id: raw.id,
+        contact: raw.contact,
+        lastMessage: raw.last_message ?? "Say hello!",
+        time: raw.last_message_time
+          ? formatMessageTime(raw.last_message_time)
+          : "",
+        unread: 0, // TODO: connect to backend - there's no unread-count tracking yet
+      }));
+      setConversations(mapped);
+      if (mapped.length > 0) {
+        setActiveId(mapped[0].id);
+      }
+    }
+
+    loadConversations();
+  }, [token]);
 
   const activeConversation = conversations.find((c) => c.id === activeId);
   const activeMessages = messagesByConversation[activeId] ?? [];
@@ -81,7 +105,10 @@ export default function ChatPage() {
       />
 
       {isAddContactOpen && (
-        <AddContactModal onClose={() => setIsAddContactOpen(false)} onAdd={handleAddContact} />
+        <AddContactModal
+          onClose={() => setIsAddContactOpen(false)}
+          onAdd={handleAddContact}
+        />
       )}
     </div>
   );

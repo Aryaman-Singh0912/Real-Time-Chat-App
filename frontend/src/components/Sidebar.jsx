@@ -1,11 +1,14 @@
 import ConversationListItem from "./ConversationListItem";
 import ThemeToggle from "./ThemeToggle";
+import { LogOut } from "lucide-react";
 
 export default function Sidebar({
   conversations,
   activeId,
   onSelect,
   onAddContactClick,
+  currentUser,
+  onLogout,
 }) {
   return (
     <aside className="w-full sm:w-[340px] shrink-0 h-full bg-paper border-r border-mist flex flex-col">
@@ -47,6 +50,21 @@ export default function Sidebar({
           ))
         )}
       </div>
+
+      {currentUser && (
+        <div className="px-5 py-3 border-t border-mist flex items-center justify-between">
+          <p className="text-sm font-semibold text-ink capitalize truncate">
+            {currentUser.username}
+          </p>
+          <button
+            onClick={onLogout}
+            title="Log out"
+            className="text-slate hover:text-ink transition-colors"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

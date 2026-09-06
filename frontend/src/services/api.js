@@ -23,6 +23,19 @@ export async function login(username, password){
   return response.json();
 }
 
+export async function getConversations(token){
+  const response = await fetch(`${API_BASE_URL}/conversations`, {
+    method: "GET",
+    headers: { Authorization: `Bearer: ${token}` },
+  });
+
+  if (!response.ok){
+    throw new Error("Failed to load conversations")
+  }
+
+  return response.json();
+}
+
 // TODO: connect to backend
 // POST `${API_BASE_URL}/signup` with JSON body { username, password }
 export async function signup(username, password) {
