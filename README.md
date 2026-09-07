@@ -5,7 +5,6 @@
 ![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
 ![Realtime](https://img.shields.io/badge/Realtime-WebSockets-4A90D9?style=flat)
 ![Auth](https://img.shields.io/badge/Auth-JWT-111111?style=flat&logo=jsonwebtokens&logoColor=white)
-![License](https://img.shields.io/badge/License-UNLICENSED-lightgrey?style=flat)
 
 A full-stack real-time messaging app: FastAPI + WebSockets backend, React + Vite + Tailwind frontend, JWT auth.
 
@@ -14,7 +13,6 @@ Real-Time-Chat-App is a two-person direct-messaging app built to explore what a 
 - A **FastAPI** backend that handles signup/login, contacts, conversations, and message history over REST, and pushes live messages + typing indicators over a single WebSocket connection per user.
 - A **React + Vite + Tailwind** frontend (internally called **Wisp**) that consumes that API and socket.
 
-Note on naming: the frontend's `package.json` still uses the Vite-scaffolded name `frontend` rather than a project-specific one — the UI itself is referred to as **Wisp** in its own README and code.
 
 ## Table of Contents
 
@@ -43,8 +41,11 @@ Note on naming: the frontend's `package.json` still uses the Vite-scaffolded nam
 - **Contact search & add** — case-insensitive username search, then add as a contact.
 - **1:1 conversations** — auto-created or reused between two users, with paginated message history.
 - **Light/dark theme toggle** and deterministic avatar generation on the frontend.
+  <img width="934" height="476" alt="image" src="https://github.com/user-attachments/assets/69319a33-189b-4998-bb00-12d385fb4fa7" />
+  <img width="957" height="500" alt="image" src="https://github.com/user-attachments/assets/05e32456-cb6f-4c70-b6ad-8b3e72f991e6" />
 
-*(Add a screenshot or short demo GIF of the chat screen here — recruiters skim visuals before text.)*
+
+
 
 ## How It Works
 
@@ -229,6 +230,6 @@ Base URL: `http://127.0.0.1:8000`. Every route except `/`, `/signup`, and `/logi
 
 ## License
 
-No license has been chosen for this project yet — **UNLICENSED**, all rights reserved by the repository owner. If you add a `LICENSE` file later, update this section to `SEE LICENSE IN LICENSE` and link it.
+No license has been chosen for this project yet — **UNLICENSED**, all rights reserved by the repository owner. 
 
 © Aryaman-Singh0912
