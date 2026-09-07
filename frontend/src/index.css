@@ -2,28 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 112.5%;
+}
+
 :root {
   --color-ink: 23 21 31;
   --color-paper: 255 255 255;
   --color-cloud: 224 251 251;
-  --color-ember: 224 69 154;       /* darker pink - was 255 105 180 */
-  --color-ember-dark: 201 58 133;  /* darker hover shade */
+  --color-ember: 255 105 180;
+  --color-ember-dark: 225 79 156;
   --color-lagoon: 0 240 255;
   --color-teal: 6 148 148;
   --color-slate: 110 106 117;
   --color-moss: 76 175 125;
   --color-mist: 203 239 239;
+  --pattern-image: url("/patterns/pattern-light.png");
 }
 
 .dark {
   --color-ink: 237 238 242;
   --color-paper: 18 26 27;
   --color-cloud: 11 20 21;
-  --color-ember: 232 87 159;       /* darker pink, dark-mode variant */
-  --color-ember-dark: 233 122 179;
+  --color-ember: 255 126 194;
+  --color-ember-dark: 255 154 207;
   --color-teal: 5 38 38;
   --color-slate: 159 180 180;
   --color-mist: 29 43 44;
+  --pattern-image: url("/patterns/pattern-dark.png");
+}
+
+.bg-pattern {
+  background-image: var(--pattern-image);
+  background-repeat: repeat;
 }
 
 * {
@@ -39,12 +50,10 @@ body,
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  font-weight: 500;
   background-color: rgb(var(--color-cloud));
   color: rgb(var(--color-ink));
 }
 
-/* thin, unobtrusive scrollbars for the message list / sidebar */
 .thin-scroll::-webkit-scrollbar {
   width: 6px;
 }
