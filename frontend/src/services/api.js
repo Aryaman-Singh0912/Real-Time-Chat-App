@@ -1,7 +1,18 @@
-export const API_BASE_URL = "http://127.0.0.1:8000";
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+async function apiFetch(path, options = {}) {
+  try {
+    return await fetch(`${API_BASE_URL}${path}`, options);
+  } catch (networkError) {
+    throw new Error(
+      "Couldn't reach the server. Please check your connection and try again.",
+    );
+  }
+}
 
 export async function login(username, password) {
-  const response = await fetch(`${API_BASE_URL}/login`, {
+  const response = await apiFetch(`/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -11,7 +22,7 @@ export async function login(username, password) {
 }
 
 export async function signup(username, password) {
-  const response = await fetch(`${API_BASE_URL}/signup`, {
+  const response = await apiFetch(`/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -24,7 +35,7 @@ export async function signup(username, password) {
 }
 
 export async function getMe(token) {
-  const response = await fetch(`${API_BASE_URL}/me`, {
+  const response = await apiFetch(`/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!response.ok) throw new Error("Failed to load the current user");
@@ -32,8 +43,8 @@ export async function getMe(token) {
 }
 
 export async function searchUsers(query, token) {
-  const response = await fetch(
-    `${API_BASE_URL}/users/search?query=${encodeURIComponent(query)}`,
+  const response = await apiFetch(
+    `/users/search?query=${encodeURIComponent(query)}`,
     { headers: { Authorization: `Bearer ${token}` } },
   );
   if (!response.ok) throw new Error("Failed to search users");
@@ -41,7 +52,7 @@ export async function searchUsers(query, token) {
 }
 
 export async function addContact(contactId, token) {
-  const response = await fetch(`${API_BASE_URL}/contacts`, {
+  const response = await apiFetch(`/contacts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -54,7 +65,7 @@ export async function addContact(contactId, token) {
 }
 
 export async function startConversation(otherUserId, token) {
-  const response = await fetch(`${API_BASE_URL}/conversations`, {
+  const response = await apiFetch(`/conversations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -67,7 +78,7 @@ export async function startConversation(otherUserId, token) {
 }
 
 export async function getConversations(token) {
-  const response = await fetch(`${API_BASE_URL}/conversations`, {
+  const response = await apiFetch(`/conversations`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!response.ok) throw new Error("Failed to load conversations");
@@ -75,8 +86,8 @@ export async function getConversations(token) {
 }
 
 export async function getMessages(conversationId, skip = 0, limit = 20, token) {
-  const response = await fetch(
-    `${API_BASE_URL}/conversations/${conversationId}/messages?skip=${skip}&limit=${limit}`,
+  const response = await apiFetch(
+    `/conversations/${conversationId}/messages?skip=${skip}&limit=${limit}`,
     { headers: { Authorization: `Bearer ${token}` } },
   );
   if (!response.ok) throw new Error("Failed to load messages");
@@ -84,7 +95,7 @@ export async function getMessages(conversationId, skip = 0, limit = 20, token) {
 }
 
 export async function getUserStatus(userId, token) {
-  const response = await fetch(`${API_BASE_URL}/users/${userId}/status`, {
+  const response = await apiFetch(`/users/${userId}/status`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!response.ok) throw new Error("Failed to load user status");
