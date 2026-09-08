@@ -61,7 +61,6 @@ Real-Time-Chat-App is a two-person direct-messaging app built to explore what a 
 - Auth uses **JWT** access tokens (`python-jose`, HS256), signed with a `SECRET_KEY` environment variable that must never be committed.
 - The WebSocket handshake passes the JWT as a `?token=` query parameter, since browsers can't set custom headers on a WS upgrade — treat these URLs as sensitive (they can end up in logs).
 - CORS is currently locked to `http://127.0.0.1:5173` / `http://localhost:5173`; update `main.py` before deploying anywhere else.
-- There's no rate limiting on `/login` or `/signup` yet — add one before exposing this publicly.
 
 If you find a security issue, please open an issue rather than posting exploit details in a public PR.
 
